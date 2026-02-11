@@ -1,4 +1,9 @@
+# Paso 1: Compilar la aplicación usando Maven
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
+COPY . .
+RUN mvn clean package -DskipTests
+
+# Paso 2: Ejecutar la aplicación
 FROM eclipse-temurin:21-jdk-alpine
-VOLUME /tmp
-COPY target/*.jar app.jar
+COPY --from=build /target/*.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
